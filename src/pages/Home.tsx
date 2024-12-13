@@ -8,6 +8,7 @@ import {
     Pagination,
     Select,
     SelectChangeEvent,
+    TextField,
     Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -28,17 +29,22 @@ const Home = () => {
 
     const [sort, setSort] = useState<string>('');
     const [filters, setFilters] = useState<string>('');
+    const [search, setSearch] = useState<string>('');
 
     const getShops = () => {
         setLoading(true);
         let promisedShops: Promise<ResponseArray<Shop>>;
-        if (sort) {
+
+        if (search) {
+            promisedShops = ShopService.getShopsWithSearch(pageSelected, 9, search); // Utilisation de la recherche
+        } else if (sort) {
             promisedShops = ShopService.getShopsSorted(pageSelected, 9, sort);
         } else if (filters) {
             promisedShops = ShopService.getShopsFiltered(pageSelected, 9, filters);
         } else {
             promisedShops = ShopService.getShops(pageSelected, 9);
         }
+
         promisedShops
             .then((res) => {
                 setShops(res.data.content);
@@ -50,7 +56,7 @@ const Home = () => {
 
     useEffect(() => {
         getShops();
-    }, [pageSelected, sort, filters]);
+    }, [pageSelected, sort, filters, search]);
 
     const handleChangePagination = (event: React.ChangeEvent<unknown>, value: number) => {
         setPageSelected(value - 1);
@@ -58,6 +64,10 @@ const Home = () => {
 
     const handleChangeSort = (event: SelectChangeEvent) => {
         setSort(event.target.value as string);
+    };
+
+    const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
     };
 
     return (
@@ -78,15 +88,19 @@ const Home = () => {
                 </Fab>
             </Box>
 
+            {/* Barre de recherche */}
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                <TextField
+                    label="Rechercher"
+                    variant="outlined"
+                    value={search}
+                    onChange={handleChangeSearch}
+                    sx={{ marginBottom: 2, width: 300 }}
+                />
+            </Box>
+
             {/* Sort and filters */}
-            <Box
-                sx={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}
-            >
+            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <FormControl sx={{ minWidth: 200 }}>
                     <InputLabel id="demo-simple-select-label">Trier par</InputLabel>
                     <Select
