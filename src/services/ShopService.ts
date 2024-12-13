@@ -7,6 +7,10 @@ export function getShops(page: number, size: number): Promise<ResponseArray<Shop
     return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}`);
 }
 
+export function getShopsWithSearch(page: number, size: number, search: string): Promise<ResponseArray<Shop>> {
+    return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}&search=${search}`);
+}
+
 export function getShopsSorted(page: number, size: number, sort: string): Promise<ResponseArray<Shop>> {
     return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}&sortBy=${sort}`);
 }
