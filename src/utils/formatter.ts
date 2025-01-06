@@ -11,10 +11,11 @@ export const pluralize = (word: string, nb: number) => `${word}${nb > 1 ? 's' : 
  * @param price The price to formatter
  * @returns The formatted price
  */
-export const priceFormatter = (price: number) => {
+export const priceFormatter = (priceInCents: number) => {
+    const priceInEuros = priceInCents / 100;
     const formatter = new Intl.NumberFormat('fr-FR', {
         style: 'currency',
         currency: 'EUR',
     });
-    return formatter.format(price);
+    return formatter.format(priceInEuros);
 };

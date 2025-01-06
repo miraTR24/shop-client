@@ -92,7 +92,7 @@ const CategoryForm = () => {
                     flexDirection: 'column',
                     ml: 'auto',
                     mr: 'auto',
-                    width: '70%',
+                    width: { xs: '90%', sm: '75%', md: '70%' },
                     mb: 2,
                 }}
             >
@@ -105,7 +105,7 @@ const CategoryForm = () => {
                     onChange={(e) => setCategory({ ...category, name: e.target.value })}
                     error={!!errors?.name}
                     helperText={errors?.name}
-                    sx={{ my: 2, width: '75%', ml: 'auto', mr: 'auto' }}
+                    sx={{ my: 2 }}
                 />
             </FormControl>
 

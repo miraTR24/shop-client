@@ -1,4 +1,4 @@
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppContext, useToastContext } from '../context';
@@ -32,7 +32,7 @@ const CategoryDetails = () => {
                     setToast({ severity: 'success', message: 'La catégorie a bien été supprimée' });
                 })
                 .catch(() => {
-                    setToast({ severity: 'error', message: 'Une erreur est survenue lors de la suppresion' });
+                    setToast({ severity: 'error', message: 'Une erreur est survenue lors de la suppression' });
                 })
                 .finally(() => {
                     setLoading(false);
@@ -50,12 +50,23 @@ const CategoryDetails = () => {
             elevation={1}
             sx={{
                 position: 'relative',
-                padding: 4,
+                padding: { xs: 2, sm: 4 },
+                maxWidth: '600px',
+                margin: '0 auto',
             }}
         >
-            <ActionButtons handleDelete={handleDelete} handleEdit={handleEdit} />
+            <Box sx={{ marginBottom: { xs: 6, sm: 3 } }}> {/* Added margin bottom */}
+                <ActionButtons handleDelete={handleDelete} handleEdit={handleEdit} />
+            </Box>
 
-            <Typography variant="h3" sx={{ textAlign: 'center' }}>
+            <Typography
+                variant="h3"
+                sx={{
+                    textAlign: 'center',
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+                    marginBottom: { xs: 2, sm: 3 },
+                }}
+            >
                 {category.name}
             </Typography>
         </Paper>
