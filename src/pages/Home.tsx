@@ -10,6 +10,7 @@ import {
     SelectChangeEvent,
     TextField,
     Typography,
+    useMediaQuery
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -26,7 +27,7 @@ const Home = () => {
     const [count, setCount] = useState<number>(0);
     const [page, setPage] = useState<number>(0);
     const [pageSelected, setPageSelected] = useState<number>(0);
-
+    const isNonMobile = useMediaQuery("(min-width: 1000px)"); // Condition pour les écrans plus grands
     const [sort, setSort] = useState<string>('');
     const [filters, setFilters] = useState<string>('');
     const [search, setSearch] = useState<string>('');
@@ -36,7 +37,7 @@ const Home = () => {
         let promisedShops: Promise<ResponseArray<Shop>>;
 
         if (search) {
-            promisedShops = ShopService.getShopsWithSearch(pageSelected, 9, search); // Utilisation de la recherche
+            promisedShops = ShopService.getShopsWithSearch(pageSelected, 9, search);
         } else if (sort) {
             promisedShops = ShopService.getShopsSorted(pageSelected, 9, sort);
         } else if (filters) {
@@ -71,15 +72,18 @@ const Home = () => {
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
-            <Typography variant="h2">Les boutiques</Typography>
+        <Box>
+            <Typography variant="h2" sx={{ textAlign: 'center', width: '100%', marginBottom: 2 }}>
+                Les boutiques
+            </Typography>
 
+            {/* Bouton Ajouter une boutique */}
             <Box
                 sx={{
                     width: '100%',
                     display: 'flex',
-                    flexDirection: 'row',
                     justifyContent: 'flex-end',
+                    marginBottom: 2,
                 }}
             >
                 <Fab variant="extended" color="primary" aria-label="add" onClick={() => navigate('/shop/create')}>
@@ -89,19 +93,37 @@ const Home = () => {
             </Box>
 
             {/* Barre de recherche */}
-            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+            <Box
+                sx={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    marginBottom: 2,
+                }}
+            >
                 <TextField
                     label="Rechercher"
                     variant="outlined"
                     value={search}
                     onChange={handleChangeSearch}
-                    sx={{ marginBottom: 2, width: 300 }}
+                    sx={{
+                        marginBottom: 2,
+                        width: { xs: '100%', sm: 300 },
+                    }}
                 />
             </Box>
 
             {/* Sort and filters */}
-            <Box sx={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <FormControl sx={{ minWidth: 200 }}>
+            <Box
+                sx={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: 'space-between',
+                    gap: 2,
+                }}
+            >
+                <FormControl sx={{ minWidth: { xs: '100%', sm: 200 } }}>
                     <InputLabel id="demo-simple-select-label">Trier par</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -122,14 +144,22 @@ const Home = () => {
                 <Filters setUrlFilters={setFilters} setSort={setSort} sort={sort} />
             </Box>
 
-            {/* Shops */}
-            <Grid container alignItems="center" rowSpacing={3} columnSpacing={3}>
+            {/* Affichage des boutiques */}
+            <Box
+                mt="20px"
+                display="grid"
+                gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+                justifyContent="space-between"
+                rowGap="20px"
+                columnGap="1.33%"
+                sx={{
+                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                }}
+            >
                 {shops?.map((shop) => (
-                    <Grid item key={shop.id} xs={4}>
-                        <ShopCard shop={shop} />
-                    </Grid>
+                    <ShopCard key={shop.id} shop={shop} />
                 ))}
-            </Grid>
+            </Box>
 
             {/* Pagination */}
             {shops?.length !== 0 ? (

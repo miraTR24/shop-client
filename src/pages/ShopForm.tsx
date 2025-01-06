@@ -120,120 +120,118 @@ const ShopForm = () => {
     };
 
     return (
-        <>
-            <Paper elevation={1} sx={{ padding: 4 }}>
-                <Typography variant="h2" sx={{ marginBottom: 3, textAlign: 'center' }}>
-                    {isAddMode ? 'Ajouter une boutique' : 'Modifier la boutique'}
-                </Typography>
+        <Paper elevation={1} sx={{ padding: 4 }}>
+            <Typography variant="h2" sx={{ marginBottom: 3, textAlign: 'center' }}>
+                {isAddMode ? 'Ajouter une boutique' : 'Modifier la boutique'}
+            </Typography>
 
-                <Box sx={{ display: 'block', ml: 'auto', mr: 'auto', width: '80%', mb: 3 }}>
-                    <Divider>Informations de la boutique</Divider>
-                    <FormControl sx={{ mt: 2, width: '50%' }}>
-                        <TextField
-                            autoFocus
-                            required
-                            label="Nom"
-                            value={shop.name}
-                            onChange={(e) => setShop({ ...shop, name: e.target.value })}
-                            fullWidth
-                            error={!!errors?.name}
-                            helperText={errors?.name}
-                            sx={{ marginBottom: 3 }}
-                        />
+            <Box sx={{ display: 'block', ml: 'auto', mr: 'auto', width: { xs: '90%', sm: '80%', md: '75%' }, mb: 3 }}>
+                <Divider>Informations de la boutique</Divider>
+                <FormControl sx={{ mt: 2, width: '100%' }}>
+                    <TextField
+                        autoFocus
+                        required
+                        label="Nom"
+                        value={shop.name}
+                        onChange={(e) => setShop({ ...shop, name: e.target.value })}
+                        fullWidth
+                        error={!!errors?.name}
+                        helperText={errors?.name}
+                        sx={{ marginBottom: 3 }}
+                    />
+                    <FormControlLabel
+                        value="start"
+                        control={
+                            <Switch
+                                checked={shop.inVacations}
+                                onChange={(e) => setShop({ ...shop, inVacations: e.target.checked })}
+                                inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                        }
+                        label="En congé"
+                        sx={{ marginBottom: 2 }}
+                    />
+                </FormControl>
 
-                        <FormControlLabel
-                            value="start"
-                            control={
-                                <Switch
-                                    checked={shop.inVacations}
-                                    onChange={(e) => setShop({ ...shop, inVacations: e.target.checked })}
-                                    inputProps={{ 'aria-label': 'controlled' }}
-                                />
-                            }
-                            label="En congé"
-                            sx={{ marginBottom: 2 }}
-                        />
-                    </FormControl>
-
-                    {/* OpeningHours */}
-                    <Divider>Horaires d&apos;ouverture de la boutique</Divider>
-                    <Box sx={{ mt: 1, mb: 3 }}>
-                        <Fab size="small" color="primary" aria-label="add">
-                            <AddIcon onClick={handleClickAddHours} />
-                        </Fab>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 3 }}>
-                        {shop.openingHours.map((openingHour, index) => (
-                            <Paper elevation={2} key={index} sx={{ position: 'relative' }}>
-                                <Box
-                                    sx={{
-                                        px: 2,
-                                        pb: 1,
-                                        pt: 7,
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'center',
-                                        gap: 1,
-                                    }}
-                                >
-                                    <FormControl sx={{ marginBottom: 2 }}>
-                                        <InputLabel id="demo-simple-select-label">Jour</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={openingHour.day}
-                                            label="Jour"
-                                            onChange={(e) => handleChange(index, 'day', e.target.value)}
-                                            sx={{ minWidth: 125 }}
-                                        >
-                                            <MenuItem value={1}>Lundi</MenuItem>
-                                            <MenuItem value={2}>Mardi</MenuItem>
-                                            <MenuItem value={3}>Mercredi</MenuItem>
-                                            <MenuItem value={4}>Jeudi</MenuItem>
-                                            <MenuItem value={5}>Vendredi</MenuItem>
-                                            <MenuItem value={6}>Samedi</MenuItem>
-                                            <MenuItem value={7}>Dimanche</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker
-                                            label="Ouvre à"
-                                            ampm={false}
-                                            value={`2014-08-18T${openingHour.openAt}`}
-                                            onChange={(v: Dayjs | null) =>
-                                                handleChange(index, 'openAt', v?.format('HH:mm:ss'))
-                                            }
-                                            renderInput={(params) => <TextField {...params} />}
-                                        />
-                                    </LocalizationProvider>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker
-                                            label="Ferme à"
-                                            ampm={false}
-                                            value={`2014-08-18T${openingHour.closeAt}`}
-                                            onChange={(v: Dayjs | null) =>
-                                                handleChange(index, 'closeAt', v?.format('HH:mm:ss'))
-                                            }
-                                            renderInput={(params) => <TextField {...params} />}
-                                        />
-                                    </LocalizationProvider>
-                                </Box>
-
-                                <Fab size="small" color="primary" sx={{ position: 'absolute', top: 5, right: 5 }}>
-                                    <ClearIcon onClick={() => handleClickClearHours(index)} />
-                                </Fab>
-                            </Paper>
-                        ))}
-                    </Box>
+                {/* OpeningHours */}
+                <Divider>Horaires d&apos;ouverture</Divider>
+                <Box sx={{ mt: 1, mb: 3 }}>
+                    <Fab size="small" color="primary" aria-label="add">
+                        <AddIcon onClick={handleClickAddHours} />
+                    </Fab>
                 </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 3 }}>
+                    {shop.openingHours.map((openingHour, index) => (
+                        <Paper elevation={2} key={index} sx={{ position: 'relative' }}>
+                            <Box
+                                sx={{
+                                    px: 2,
+                                    pb: 1,
+                                    pt: 7,
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    gap: 1,
+                                    flexWrap: 'wrap',
+                                }}
+                            >
+                                <FormControl sx={{ marginBottom: 2, flexGrow: 1 }}>
+                                    <InputLabel id="demo-simple-select-label">Jour</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={openingHour.day}
+                                        label="Jour"
+                                        onChange={(e) => handleChange(index, 'day', e.target.value)}
+                                        sx={{ minWidth: 125 }}
+                                    >
+                                        <MenuItem value={1}>Lundi</MenuItem>
+                                        <MenuItem value={2}>Mardi</MenuItem>
+                                        <MenuItem value={3}>Mercredi</MenuItem>
+                                        <MenuItem value={4}>Jeudi</MenuItem>
+                                        <MenuItem value={5}>Vendredi</MenuItem>
+                                        <MenuItem value={6}>Samedi</MenuItem>
+                                        <MenuItem value={7}>Dimanche</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        label="Ouvre à"
+                                        ampm={false}
+                                        value={`2014-08-18T${openingHour.openAt}`}
+                                        onChange={(v: Dayjs | null) =>
+                                            handleChange(index, 'openAt', v?.format('HH:mm:ss'))
+                                        }
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </LocalizationProvider>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        label="Ferme à"
+                                        ampm={false}
+                                        value={`2014-08-18T${openingHour.closeAt}`}
+                                        onChange={(v: Dayjs | null) =>
+                                            handleChange(index, 'closeAt', v?.format('HH:mm:ss'))
+                                        }
+                                        renderInput={(params) => <TextField {...params} />}
+                                    />
+                                </LocalizationProvider>
+                            </Box>
 
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button variant="contained" onClick={handleSubmit}>
-                        Valider
-                    </Button>
+                            <Fab size="small" color="primary" sx={{ position: 'absolute', top: 5, right: 5 }}>
+                                <ClearIcon onClick={() => handleClickClearHours(index)} />
+                            </Fab>
+                        </Paper>
+                    ))}
                 </Box>
-            </Paper>
-        </>
+            </Box>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant="contained" onClick={handleSubmit}>
+                    Valider
+                </Button>
+            </Box>
+        </Paper>
     );
 };
 
