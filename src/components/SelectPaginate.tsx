@@ -23,6 +23,7 @@ const styles: StylesConfig = {
             borderColor: isFocused ? '#607d8b' : '#c4c4c4',
         },
         height: '56px',
+        width:'100%'
     }),
     option: (base, { isSelected, isFocused }) => ({
         ...base,
@@ -40,14 +41,15 @@ const styles: StylesConfig = {
         transition: '0.2s ease all',
         backgroundColor: 'white',
         padding: hasValue || selectProps.inputValue ? '0 4px' : '0',
+        width:'100%'
     }),
 };
 
 const CustomValueContainer = ({ children, ...props }: any) => {
     const { ValueContainer, Placeholder } = components;
     return (
-        <ValueContainer {...props}>
-            <Placeholder {...props} isFocused={props.isFocused}>
+        <ValueContainer sx={{width:'100%'}} {...props}>
+            <Placeholder sx={{width:'100%'}} {...props} isFocused={props.isFocused}>
                 {props.selectProps.placeholder}
             </Placeholder>
             {React.Children.map(children, (child) => (child && child.type !== Placeholder ? child : null))}
