@@ -9,6 +9,7 @@ import {
     MenuItem,
     Select,
     TextField,
+    Box
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -20,6 +21,7 @@ type FiltersType = {
     inVacations: string;
     createdAfter: Dayjs | null;
     createdBefore: Dayjs | null;
+    name: '';
 };
 
 const transformFiltersToURL = (filters: FiltersType): string => {
@@ -50,6 +52,7 @@ const Filters = ({ setUrlFilters, setSort, sort }: Props) => {
         inVacations: '',
         createdAfter: null,
         createdBefore: null,
+        name: ''
     };
     const [open, setOpen] = useState<boolean>(false);
     const [filters, setFilters] = useState<FiltersType>(defaultFilters);
@@ -87,9 +90,22 @@ const Filters = ({ setUrlFilters, setSort, sort }: Props) => {
 
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Filtrer les boutiques</DialogTitle>
+                {/* Barre de recherche */}
+                <DialogContent>
+                    <TextField
+                        fullWidth
+                        label="Recherche"
+                        variant="outlined"
+                        value={filters.name || ''}
+                        onChange={(e) => handleChange('name', e.target.value)}
+                        sx={{ marginBottom: 2 }}
+                    />
+                </DialogContent>
 
                 <DialogContent>
                     <FormControl fullWidth sx={{ marginTop: 2 }}>
+                    
+
                         <InputLabel id="demo-simple-select-label">Congé</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"

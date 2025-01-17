@@ -55,7 +55,6 @@ export function getShops(page: number, size: number): Promise<ResponseArray<Shop
 
 
 export function getShopsWithSearch(page: number, size: number, search: string): Promise<ResponseArray<Shop>> {
-    console.log("search=>",search)
     return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}&name=${search}`).catch((error) => {
         if (!error.response) {
             // En cas d'erreur réseau (par exemple, si le serveur est éteint)
@@ -83,12 +82,9 @@ export function getShopsSorted(page: number, size: number, sort: string): Promis
 
 export function getShopsFiltered(page: number, size: number, urlFilters: string): Promise<ResponseArray<Shop>> {
     return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}${urlFilters}`).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
+    if (error.response.status >= 500) {
             // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
+            console.log("err")
         }
         throw error;
     });
