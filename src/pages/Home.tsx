@@ -92,27 +92,7 @@ const Home = () => {
                 </Fab>
             </Box>
 
-            {/* Barre de recherche */}
-            <Box
-                sx={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    marginBottom: 2,
-                }}
-            >
-                <TextField
-                    label="Rechercher"
-                    variant="outlined"
-                    value={search}
-                    onChange={handleChangeSearch}
-                    sx={{
-                        marginBottom: 2,
-                        width: { xs: '100%', sm: 300 },
-                    }}
-                />
-            </Box>
-
+            
             {/* Sort and filters */}
             <Box
                 sx={{
