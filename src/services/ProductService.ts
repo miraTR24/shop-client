@@ -1,30 +1,13 @@
 import axios, { AxiosResponse } from 'axios';
 import { MinimalProduct, Product, ResponseArray } from '../types';
+import {handleError} from '../utils/axiosUtils'
 
 export function getProducts(page: number, size: number): Promise<ResponseArray<Product>> {
-    return axios.get(`${process.env.REACT_APP_API}/products?page=${page}&size=${size}`).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
-            // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
-        }
-        throw error;
-    });
+    return axios.get(`${process.env.REACT_APP_API}/products?page=${page}&size=${size}`).catch(handleError);
 }
 
 export function getProductsbyShop(shopId: string, page: number, size: number): Promise<ResponseArray<Product>> {
-    return axios.get(`${process.env.REACT_APP_API}/products?shopId=${shopId}&page=${page}&size=${size}`).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
-            // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
-        }
-        throw error;
-    });
+    return axios.get(`${process.env.REACT_APP_API}/products?shopId=${shopId}&page=${page}&size=${size}`).catch(handleError);
 }
 
 export function getProductsbyShopAndCategory(
@@ -35,66 +18,34 @@ export function getProductsbyShopAndCategory(
 ): Promise<ResponseArray<Product>> {
     return axios.get(
         `${process.env.REACT_APP_API}/products?shopId=${shopId}&categoryId=${categoryId}&page=${page}&size=${size}`,
-    ).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
-            // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
-        }
-        throw error;
-    });
+    ).catch(handleError);
 }
 
 export function getProduct(id: string): Promise<AxiosResponse<Product>> {
-    return axios.get(`${process.env.REACT_APP_API}/products/${id}`).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
-            // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
-        }
-        throw error;
-    });
+    return axios.get(`${process.env.REACT_APP_API}/products/${id}`).catch(handleError);
 }
 
 export function createProduct(product: MinimalProduct): Promise<AxiosResponse<Product>> {
-    return axios.post(`${process.env.REACT_APP_API}/products`, product).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
-            // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
-        }
-        throw error;
-    });
+    // Multiplier le prix par 100 avant de créer le produit
+    const updatedProduct = {
+        ...product,
+        price: product.price * 100
+    };
+
+    return axios
+        .post(`${process.env.REACT_APP_API}/products`, updatedProduct)
+        .catch(handleError);
 }
 
+
 export function editProduct(product: MinimalProduct): Promise<AxiosResponse<Product>> {
-    return axios.put(`${process.env.REACT_APP_API}/products`, product).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
-            // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
-        }
-        throw error;
-    });
+    const updatedProduct = {
+        ...product,
+        price: product.price * 100
+    };
+    return axios.put(`${process.env.REACT_APP_API}/products`, updatedProduct).catch(handleError);
 }
 
 export function deleteProduct(id: string): Promise<AxiosResponse<Product>> {
-    return axios.delete(`${process.env.REACT_APP_API}/products/${id}`).catch((error) => {
-        if (!error.response) {
-            // En cas d'erreur réseau (par exemple, si le serveur est éteint)
-            window.location.href = '/maintenance';
-        } else if (error.response.status >= 500) {
-            // Si l'erreur est un problème côté serveur (codes d'erreur >= 500)
-            window.location.href = '/maintenance';
-        }
-        throw error;
-    });
+    return axios.delete(`${process.env.REACT_APP_API}/products/${id}`).catch(handleError);
 }
