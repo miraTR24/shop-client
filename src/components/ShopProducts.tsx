@@ -54,9 +54,11 @@ const ShopProducts = ({ shopId }: Props) => {
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    gap: 2,
+                    flexWrap: 'wrap', // Make filter responsive on small screens
                 }}
             >
-                <FormControl sx={{ minWidth: 220 }}>
+                <FormControl sx={{ minWidth: 220, width: '100%', maxWidth: 300 }}>
                     <SelectPaginate
                         value={filter}
                         onChange={setFilter}
@@ -67,18 +69,28 @@ const ShopProducts = ({ shopId }: Props) => {
                 </FormControl>
             </Box>
 
+            {/* Product Grid */}
             <Grid container alignItems="center" rowSpacing={3} columnSpacing={3}>
                 {products?.map((product) => (
-                    <Grid item key={product.id} xs={4}>
+                    <Grid item key={product.id} xs={12} sm={6} md={4}> {/* Adjust grid to take full width on xs */}
                         <ProductCard product={product} />
                     </Grid>
                 ))}
             </Grid>
 
+            {/* Pagination */}
             {products?.length !== 0 ? (
-                <Pagination count={count} page={page} siblingCount={1} onChange={handleChangePagination} />
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mt: 3 }}>
+                    <Pagination
+                        count={count}
+                        page={page}
+                        siblingCount={1}
+                        onChange={handleChangePagination}
+                        variant="outlined"
+                    />
+                </Box>
             ) : (
-                <Typography variant="h6" sx={{ mt: -4 }}>
+                <Typography variant="h6" sx={{ mt: 4, textAlign: 'center' }}>
                     Aucun produit correspondant
                 </Typography>
             )}

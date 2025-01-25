@@ -1,4 +1,4 @@
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, Box } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ActionButtons } from '../components';
@@ -38,7 +38,7 @@ const ProductDetails = () => {
                     setToast({ severity: 'success', message: 'Le produit a bien été supprimé' });
                 })
                 .catch(() => {
-                    setToast({ severity: 'error', message: 'Une erreur est survenue lors de la suppresion' });
+                    setToast({ severity: 'error', message: 'Une erreur est survenue lors de la suppression' });
                 })
                 .finally(() => {
                     setLoading(false);
@@ -56,21 +56,37 @@ const ProductDetails = () => {
             elevation={1}
             sx={{
                 position: 'relative',
-                padding: 4,
+                padding: { xs: 2, sm: 4 },
+                maxWidth: '600px',
+                margin: '0 auto',
             }}
         >
-            <ActionButtons handleDelete={handleDelete} handleEdit={handleEdit} />
+            <Box sx={{ marginBottom: { xs: 6, sm: 3 } }}> {/* Added margin bottom */}
+                <ActionButtons handleDelete={handleDelete} handleEdit={handleEdit} />
+            </Box>
 
-            <Typography variant="h3" sx={{ textAlign: 'center', marginBottom: 3 }}>
+            <Typography
+                variant="h3"
+                sx={{
+                    textAlign: 'center',
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
+                    marginBottom: { xs: 2, sm: 3 },
+                }}
+            >
                 {formattedProduct.name}
             </Typography>
-            <Typography variant="h6">Prix : {priceFormatter(formattedProduct.price)}</Typography>
+
+            <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                Prix : {priceFormatter(formattedProduct.price)}
+            </Typography>
+
             {formattedProduct.description && (
-                <Typography sx={{ mt: 1.5 }} color="text.secondary">
+                <Typography  color="text.secondary" sx={{ mt: 1.5,fontSize: { xs: '0.9rem', sm: '1rem' } }}>
                     Description : {formattedProduct.description}
                 </Typography>
             )}
-            <Typography sx={{ mt: 1.5 }}>
+
+            <Typography sx={{ fontSize: {mt: 1.5, xs: '0.9rem', sm: '1rem' } }}>
                 Boutique :{' '}
                 {formattedProduct.shop?.name ? (
                     <Link to={`/shop/${formattedProduct.shop?.id}`} style={{ color: '#607d8b' }}>
@@ -80,7 +96,8 @@ const ProductDetails = () => {
                     "N'appartient à aucune boutique"
                 )}
             </Typography>
-            <Typography sx={{ mt: 1.5, fontStyle: 'italic' }}>
+
+            <Typography sx={{ mt: 1.5, fontStyle: 'italic' ,fontSize: { xs: '0.9rem', sm: '1rem' } }} >
                 Catégories : {''}
                 {formattedProduct.categories.length === 0
                     ? 'Aucune'

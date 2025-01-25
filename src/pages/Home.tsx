@@ -8,7 +8,9 @@ import {
     Pagination,
     Select,
     SelectChangeEvent,
+    TextField,
     Typography,
+    useMediaQuery
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -25,20 +27,25 @@ const Home = () => {
     const [count, setCount] = useState<number>(0);
     const [page, setPage] = useState<number>(0);
     const [pageSelected, setPageSelected] = useState<number>(0);
-
+    const isNonMobile = useMediaQuery("(min-width: 1000px)"); // Condition pour les écrans plus grands
     const [sort, setSort] = useState<string>('');
     const [filters, setFilters] = useState<string>('');
+    const [search, setSearch] = useState<string>('');
 
     const getShops = () => {
         setLoading(true);
         let promisedShops: Promise<ResponseArray<Shop>>;
-        if (sort) {
+
+        if (search) {
+            promisedShops = ShopService.getShopsWithSearch(pageSelected, 9, search);
+        } else if (sort) {
             promisedShops = ShopService.getShopsSorted(pageSelected, 9, sort);
         } else if (filters) {
             promisedShops = ShopService.getShopsFiltered(pageSelected, 9, filters);
         } else {
             promisedShops = ShopService.getShops(pageSelected, 9);
         }
+
         promisedShops
             .then((res) => {
                 setShops(res.data.content);
@@ -50,7 +57,7 @@ const Home = () => {
 
     useEffect(() => {
         getShops();
-    }, [pageSelected, sort, filters]);
+    }, [pageSelected, sort, filters, search]);
 
     const handleChangePagination = (event: React.ChangeEvent<unknown>, value: number) => {
         setPageSelected(value - 1);
@@ -60,16 +67,23 @@ const Home = () => {
         setSort(event.target.value as string);
     };
 
-    return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
-            <Typography variant="h2">Les boutiques</Typography>
+    const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    };
 
+    return (
+        <Box>
+            <Typography variant="h2" sx={{ textAlign: 'center', width: '100%', marginBottom: 2 }}>
+                Les boutiques
+            </Typography>
+
+            {/* Bouton Ajouter une boutique */}
             <Box
                 sx={{
                     width: '100%',
                     display: 'flex',
-                    flexDirection: 'row',
                     justifyContent: 'flex-end',
+                    marginBottom: 2,
                 }}
             >
                 <Fab variant="extended" color="primary" aria-label="add" onClick={() => navigate('/shop/create')}>
@@ -78,16 +92,18 @@ const Home = () => {
                 </Fab>
             </Box>
 
+            
             {/* Sort and filters */}
             <Box
                 sx={{
                     width: '100%',
                     display: 'flex',
-                    flexDirection: 'row',
+                    flexDirection: { xs: 'column', sm: 'row' },
                     justifyContent: 'space-between',
+                    gap: 2,
                 }}
             >
-                <FormControl sx={{ minWidth: 200 }}>
+                <FormControl sx={{ minWidth: { xs: '100%', sm: 200 } }}>
                     <InputLabel id="demo-simple-select-label">Trier par</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -108,14 +124,22 @@ const Home = () => {
                 <Filters setUrlFilters={setFilters} setSort={setSort} sort={sort} />
             </Box>
 
-            {/* Shops */}
-            <Grid container alignItems="center" rowSpacing={3} columnSpacing={3}>
+            {/* Affichage des boutiques */}
+            <Box
+                mt="20px"
+                display="grid"
+                gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+                justifyContent="space-between"
+                rowGap="20px"
+                columnGap="1.33%"
+                sx={{
+                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                }}
+            >
                 {shops?.map((shop) => (
-                    <Grid item key={shop.id} xs={4}>
-                        <ShopCard shop={shop} />
-                    </Grid>
+                    <ShopCard key={shop.id} shop={shop} />
                 ))}
-            </Grid>
+            </Box>
 
             {/* Pagination */}
             {shops?.length !== 0 ? (
